@@ -41,6 +41,9 @@ public struct University: Codable {
     let id: Int
     let title: String
     @objc public func getTitle() -> String { title }
+    @objc public func printTitle() { 
+        print("title: \(title)")
+    }
     public init(id: Int, title: String) {
         self.id = id
         self.title = title
