@@ -13,6 +13,7 @@ struct Bodies<Body: Codable>: Codable {
 public struct Country: Codable {
     let id: Int
     let title: String
+    var object: ObjCCountry { ObjCCountry(id: id, title: title) }
 }
 
 public struct City: Codable {

@@ -1,9 +1,15 @@
-public class VKApiGate {
-    public init() {}
-    public func run() {
+import Foundation
+
+public class VKApiGate: NSObject {
+    var selectedCountry: Country?
+    var selectedCity: City?
+    var selctedUniversity: University?
+    
+    public override init() {}
+    @objc public func run() {
         print("vk gate run")
     }
-    public func getCountry() -> ObjCCountry {
+    @objc public func getCountry() -> ObjCCountry {
         ObjCCountry(id: 10, title: "Albania")
     }
 }
