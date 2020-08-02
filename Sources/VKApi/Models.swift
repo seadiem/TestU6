@@ -38,8 +38,8 @@ public struct University: Codable {
 // Bridge to Objective-C
 
 @objc public class ObjCCountry: NSObject {
-    @objc let id: Int
-    @objc let title: String
+    @objc public let id: Int
+    @objc public let title: String
     @objc public func getTitle() -> String { title }
     @objc public func printTitle() { 
         print("title: \(title)")
