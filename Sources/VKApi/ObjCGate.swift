@@ -1,7 +1,7 @@
 import Foundation
 
 public class FetchGate: NSObject {
-    func run() {
+    public func run() {
         print("run")
     }
 }
