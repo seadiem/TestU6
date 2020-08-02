@@ -16,7 +16,6 @@ struct Runner {
     func run() { 
 //        let app = App() // Эта функция никогда не завершается, поэтому инстанс App всегда находится в памяти
 //        app.run()
-        TestGate().run()
         runListener()
     }
 }

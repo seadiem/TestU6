@@ -35,6 +35,16 @@ public struct University: Codable {
     }
 }
 
+// Bridge to Objective-C
+
+@objc public class ObjCCountry: NSObject {
+    @objc public let id: Int
+    @objc public let title: String
+    public init(id: Int, title: String) {
+        self.id = id
+        self.title = title
+    }
+}
 
 // Yandex
 
