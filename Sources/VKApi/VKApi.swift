@@ -13,13 +13,10 @@ public struct VKApi {
     var begin: String { "https://api.vk.com/method/" }
     var end: String { "access_token=" + accessToken + "&" + "v=5.122" }
     var getCountriesURL: String { 
-        begin + Metods.countries.rawValue + "?" + "need_all=1" + "&" + end 
+        begin + Metods.countries.rawValue + "?" + "need_all=1" + "&" + "count=500" + "&" + end 
     }
     func getCitiesURL(country: Country) -> String {
-        begin + Metods.cities.rawValue + "?" + "country_id=\(country.id)" + "&" + "need_all=1" + "&" + end 
-    }
-    func getCitiesURL(country: Int) -> String {
-        begin + Metods.cities.rawValue + "?" + "country_id=\(country)" + "&" + "need_all=0" + "&" + "offset=0" + "&" + "count=100" + "&" + end 
+        begin + Metods.cities.rawValue + "?" + "country_id=\(country.id)" + "&" + "need_all=0" + "&" + "count=500" + "&" + end 
     }
     func getUniversitiesURL(country: Country, city: City) -> String {
         begin + Metods.universities.rawValue + "?" + "country_id=\(country.id)" + "&" + "city_id=\(city.id)" + "&" + "need_all=0" + "&" + end 
@@ -38,6 +35,8 @@ public struct VKApi {
     public func getCityies(country: Country, handler: @escaping ([City]) -> Void) {
         let url = URL(string: getCitiesURL(country: country))!
         URLSession.shared.dataTask(with: url) { (data, response, error) in
+            let text = String(bytes: data!, encoding: .utf8)
+            print(text!)
             do {
                 let response = try JSONDecoder().decode(Response<City>.self, from: data!)
                 handler(response.response.items)

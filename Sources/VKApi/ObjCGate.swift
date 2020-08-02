@@ -2,6 +2,7 @@ import Foundation
 
 @objc public protocol VKApiGateDelegate {
     func newDataGotAndNeedDisplay()
+    func universityInfoGot()
 } 
 
 @objc public class VKApiGate: NSObject {
@@ -11,7 +12,7 @@ import Foundation
     
     var selectedCountry: Country?
     var selectedCity: City?
-    var selctedUniversity: University?
+    var selectedUniversity: University?
     
     var countrues: [Country]
     var cities: [City]
@@ -26,6 +27,10 @@ import Foundation
         universities = []
         flow = .countries
         super.init()
+    }
+    
+    @objc public func initialSearch() {
+        loadCountries()
     }
     
     @objc public func getSearchScreenCount() -> Int {
@@ -53,7 +58,7 @@ import Foundation
             if let selected = selectedCity { return selected.object } 
             else { return ObjCCity(id: 0, title: "~") }
         case 2:
-            if let selected = selctedUniversity { return selected.object } 
+            if let selected = selectedUniversity { return selected.object } 
             else { return ObjCUniversity(id: 0, title: "~") }
         default: 
             return ObjCCountry(id: 0, title: "Empty")
@@ -61,6 +66,7 @@ import Foundation
     }
     
     @objc func tapInMainControllerAt(number: Int) {
+        print("tap with number: \(number)")
         switch number {
         case 0: 
             loadCountries()
@@ -80,29 +86,36 @@ import Foundation
         case .countries: 
             guard countrues.isEmpty == false else { return }
             selectedCountry = countrues[number]
-            loadCityes()
         case .cities:
             guard cities.isEmpty == false else { return }
             selectedCity = cities[number]
-            loadUniversityes()
         case .universities:
             guard universities.isEmpty == false else { return }
-            selctedUniversity = universities[number]
+            selectedUniversity = universities[number]
         }
         controller.newDataGotAndNeedDisplay()
     }
     
     func loadCountries() {
+        print("load countries")
         VKApi().getCountries { countries in
             self.countrues = countries
             self.controller.newDataGotAndNeedDisplay()
             self.searchController?.newDataGotAndNeedDisplay()
+            if countries.isEmpty == false && self.selectedCountry == nil {
+                self.selectedCountry = countries[0]
+            }
         }
     }
     
     func loadCityes() {
-        guard let country = selectedCountry else { return }
+        print("load cityes")
+        guard let country = selectedCountry else {
+            print("no selected country")
+            return 
+        }
         VKApi().getCityies(country: country) { cities in
+            cities.forEach { print("city: \($0)") }
             self.cities = cities
             self.controller.newDataGotAndNeedDisplay()
             self.searchController?.newDataGotAndNeedDisplay()
@@ -121,6 +134,17 @@ import Foundation
     @objc public func testRun() {
         DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500)) { 
             self.controller.newDataGotAndNeedDisplay()
+        }
+    }
+    
+    @objc public func throwToDetails() {
+        
+        guard var university = selectedUniversity else { return }
+        print("university: \(university)")
+        YandexApi(university: university).getInfo { feature in
+            university.insertYandex(part: feature)
+            print("inserted, university: \(university)")
+            self.controller.universityInfoGot()
         }
     }
 }
