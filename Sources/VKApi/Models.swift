@@ -19,6 +19,7 @@ public struct Country: Codable {
 public struct City: Codable {
     let id: Int
     let title: String
+    var object: ObjCCity { ObjCCity(id: id, title: title) }
 }
 
 public struct University: Codable {
@@ -34,21 +35,54 @@ public struct University: Codable {
         address = part.properties.CompanyMetaData.address
         url = URL(string: part.properties.CompanyMetaData.url)
     }
+    var object: ObjCUniversity { ObjCUniversity(id: id, title: title) }
 }
 
 // Bridge to Objective-C
 
-@objc public class ObjCCountry: NSObject {
+@objc public protocol ObjCCellModel {
+    var subtitle: String { get }
+    var title: String { get }
+}
+
+
+@objc public class ObjCCountry: NSObject, ObjCCellModel {
     @objc public let id: Int
     @objc public let title: String
-    @objc public func getTitle() -> String { title }
-    @objc public func printTitle() { 
-        print("title: \(title)")
-    }
+    @objc public var subtitle: String = "COUNTRY"
     public init(id: Int, title: String) {
         self.id = id
         self.title = title
     }
+    @objc public func getTitle() -> String { title }
+    @objc public func printTitle() { 
+        print("title: \(title)")
+    }
+}
+
+@objc public class ObjCCity: NSObject, ObjCCellModel {
+    @objc public let id: Int
+    @objc public let title: String
+    @objc public var subtitle: String = "CITY"
+    public init(id: Int, title: String) {
+        self.id = id
+        self.title = title
+    }
+    @objc public func getTitle() -> String { title }
+    @objc public func printTitle() { 
+        print("title: \(title)")
+    }
+}
+
+@objc public class ObjCUniversity: NSObject, ObjCCellModel {
+    @objc public let id: Int
+    @objc public let title: String
+    @objc public var subtitle: String = "UNYVERSITY"
+    public init(id: Int, title: String) {
+        self.id = id
+        self.title = title
+    }
+    @objc public func getTitle() -> String { title }
 }
 
 // Yandex
